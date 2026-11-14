@@ -29,3 +29,4 @@ python3 main.py   # reads /input/*.in, writes /output/*.out
 ```
 
 Python 3.13, standard library only, offline, deterministic.
+Quantile rows are clamped to [0, 1] and rounded to 6 decimals.
