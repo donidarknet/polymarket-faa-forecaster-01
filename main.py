@@ -18,6 +18,8 @@ Model: persistence with empirical quantile bands.
   news-driven final (the FAA markets) is more likely to see.
 - Standard library only, no network, deterministic: the same case
   always writes the same bytes.
+- Every forecast row is clamped to [0, 1], so no quantile ever leaves
+  the valid price range even after a large pooled move.
 
 Input:  /input/<id>.in (or $MAKEFUN_INPUT_DIR), one JSON case:
   {"schema": "makefun/polymarket-case/v1", "case": <id>, "at": ...,
@@ -56,6 +58,7 @@ def _quantile(sorted_values, level):
     hi = min(lo + 1, n - 1)
     frac = pos - lo
     return sorted_values[lo] * (1.0 - frac) + sorted_values[hi] * frac
+
 
 
 def pooled_move_quantiles(markets):
@@ -111,6 +114,7 @@ def forecast_market(last_price, move_quantiles, horizon_minutes):
                 row[i] = row[i - 1]
         rows.append(row)
     return rows
+
 
 
 def main():
